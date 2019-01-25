@@ -1,41 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import { game, colorMap } from './4x4_new';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import actionCreators from './actionCreators';
 import './style.scss';
-import { getIndex, randomIndex } from './utils';
+import { colorMap } from './color';
 
-class App extends Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      data: [
-        0, 0, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 0
-      ],
-      nos: [2, 4],
-      score: 0
-    };
   }
 
   componentDidMount() {
-    this.start();
+    this.props.actions.start();
     ReactDOM.findDOMNode(this.refs.container).focus();
-  }
-
-  start() {
-    const { data, nos } = this.state;
-    const index = getIndex(data, true);
-    const newState = data.map((d, i) => {
-      if (i === index) {
-        return nos[randomIndex(2)];
-      }
-      return 0;
-    });
-
-    this.setState({ data: newState })
   }
 
   keyDown(e) {
@@ -44,7 +22,7 @@ class App extends Component {
     switch (e.keyCode) {
       case 37: direction = 'left';
         break;
-      case 38: direction = 'up';
+      case 38: direction = 'top';
         break;
       case 39: direction = 'right';
         break;
@@ -53,19 +31,18 @@ class App extends Component {
     }
 
     if (direction) {
-      const { score, newState } = game(direction, this.state.data);
-
-      if (!newState) {
-        alert('Game over');
-      }
-      else {
-        this.setState({ data: newState, score });
-      }
+      this.props.actions.onMove(direction);
     }
   }
 
   render() {
-    const { score, data } = this.state;
+    const { app, actions } = this.props;
+    const { score, data, finish } = app;
+
+    if (finish) {
+      alert('Game over');
+    }
+
     return (
       <div className="page" onKeyDown={(e) => this.keyDown(e)} tabIndex="1" ref="container">
         <div className="score">
@@ -84,11 +61,20 @@ class App extends Component {
           }
         </ul>
         <div className="actions">
-          <button onClick={() => this.start()}>Restart</button>
+          <button onClick={() => actions.start()}>Restart</button>
         </div>
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return state;
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    actions: bindActionCreators(actionCreators, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
