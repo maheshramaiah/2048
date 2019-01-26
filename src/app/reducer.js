@@ -1,5 +1,5 @@
 import * as types from './actionTypes';
-import { randomIndex, getInsertionIndex, getUpdatedData } from './helpers';
+import { randomIndex, getInsertionIndex, getUpdatedData, compareArrays } from './helpers';
 
 const initialState = {
   data: [
@@ -33,25 +33,36 @@ export default function(state = initialState, action) {
     }
     case types.ON_MOVE: {
       const { direction } = action;
-      const { score, newData: data } = getUpdatedData(direction, state);
+      const { data, score } = getUpdatedData(direction, state.data);
+      const insertionIndex = getInsertionIndex(data);
 
-      if (!data) {
+      if (compareArrays(data, state.data) && insertionIndex !== undefined) {
+        return state;
+      }
+
+      if (insertionIndex === undefined) {
         return {
           ...state,
           finish: true
         };
       }
       else {
+        const insertionNo = state.insertion[randomIndex(2)];
+
         return {
           ...state,
-          data,
-          score
+          data: data.map((d, i) => {
+            if (i === insertionIndex) {
+              return insertionNo;
+            }
+            return d;
+          }),
+          score: state.score + score
         };
       }
     }
     default: return state;
   }
 }
-
 
 

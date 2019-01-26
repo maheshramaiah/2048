@@ -18,7 +18,7 @@ export function getInsertionIndex(data, force = false) {
     }
 
     return acc;
-  });
+  }, []);
 
   const index = indices[Math.floor(Math.random() * indices.length)];
 
@@ -29,50 +29,37 @@ export function getInsertionIndex(data, force = false) {
   return index;
 }
 
-export function getUpdatedData(direction, { data, insertion, score }) {
+export function getUpdatedData(direction, data) {
   const outer = ['top', 'bottom'].includes(direction) ? COL_ITR : ROW_ITR;
   const inner = ['top', 'bottom'].includes(direction) ? ROW_ITR : COL_ITR;
   let newData = [...data];
-  let arranger = [];
-  let updatedList = [];
-  let itr = 0;
-  let moved = false;
-  let insertNo = false;
+  let totalScore = 0;
 
   for (let i = 0; i < outer.max; i += outer.inc) {
-    arranger = [];
+    let arranger = [];
     for (let j = 0; j < inner.max; j += inner.inc) {
       arranger.push(newData[i + j]);
     }
-    ({ moved, data: updatedList, score } = arrange(arranger, ['bottom', 'right'].includes(direction), score));
-    if (moved && !insertNo) {
-      insertNo = true;
-    }
-    itr = 0;
+
+    const { data: updatedList, score } = arrange(arranger, ['bottom', 'right'].includes(direction));
+    let itr = 0;
+
+    totalScore += score;
+
     for (let k = 0; k < inner.max; k += inner.inc) {
       newData[i + k] = updatedList[itr++];
     }
   }
 
-  const index = getInsertionIndex(newData);
-
-  if (index === undefined) {
-    return {};
-  }
-  if (insertNo) {
-    newData[index] = insertion[randomIndex(2)];
-  }
-
   return {
-    score,
-    newData
+    data: newData,
+    score: totalScore
   };
 }
 
-function arrange(data, reverse = false, score) {
+function arrange(data, reverse = false) {
   let d = reverse ? [...data].reverse() : [...data];
-  let summed = false;
-  let moved = false;
+  let summed = [];
 
   for (let i = 1; i < 4; i++) {
     if (d[i] !== 0) {
@@ -81,14 +68,13 @@ function arrange(data, reverse = false, score) {
         if (d[j] === 0) {
           d[j] = d[itr];
           d[itr] = 0;
-          moved = true;
         }
-        else if (d[j] === d[itr] && !summed) {
-          d[j] += d[itr];
-          score += d[j];
+        else if (d[j] === d[itr] && !summed.length) {
+          const sum = d[itr] + d[j];
+
+          d[j] = sum;
           d[itr] = 0;
-          summed = true;
-          moved = true;
+          summed.push(sum);
 
           break;
         }
@@ -102,8 +88,12 @@ function arrange(data, reverse = false, score) {
 
   return {
     data: reverse ? [...d].reverse() : d,
-    moved,
-    score
+    score: summed.reduce((ac, v) => ((ac += v), ac), 0)
   };
 }
+
+export function compareArrays(a, b) {
+  return a.join(',') === b.join(',');
+}
+
 
