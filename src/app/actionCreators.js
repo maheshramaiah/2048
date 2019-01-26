@@ -11,5 +11,15 @@ export default {
       type: types.ON_MOVE,
       direction
     };
+  },
+  undo() {
+    return {
+      type: types.UNDO
+    };
+  },
+  redo() {
+    return {
+      type: types.REDO
+    };
   }
 }
