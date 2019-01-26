@@ -7,6 +7,10 @@ const ROW_ITR = {
   inc: 4
 };
 
+export function compareArrays(a, b) {
+  return a.every((aa, i) => b[i] == aa);
+}
+
 export function randomIndex(max) {
   return Math.floor(Math.random() * max);
 }
@@ -90,10 +94,6 @@ function arrange(data, reverse = false) {
     data: reverse ? [...d].reverse() : d,
     score: summed.reduce((ac, v) => ((ac += v), ac), 0)
   };
-}
-
-export function compareArrays(a, b) {
-  return a.join(',') === b.join(',');
 }
 
 
