@@ -11,7 +11,7 @@
     display: flex;
     flex-wrap: wrap;
     width: 440px;
-    margin: 100px auto 50px auto;
+    margin: 210px auto 50px auto;
     list-style-type: none;
     padding: 3px;
     border-radius: 4px;
@@ -42,6 +42,8 @@
         border: 0;
         font-size: 14px;
         cursor: pointer;
+        margin: 0 5px;
+        text-transform: uppercase;
         &:focus {
             outline: none;
         }
@@ -53,14 +55,21 @@
 
 .score {
     position: absolute;
-    width: 80px;
-    top: 20px;
+    top: 110px;
     left: calc(50% - 222px);
-    background: #bbada0;
-    border-radius: 4px;
-    text-align: center;
-    color: #fff;
-    p {
-        margin: 5px 0;
+    width: 446px;
+    div {
+        display: inline-block;
+        padding: 10px;
+        background: #bbada0;
+        border-radius: 4px;
+        text-align: center;
+        color: #fff;
+        p {
+            margin: 5px 0;
+        }
+    }
+    .highestScore {
+        float: right;
     }
 }

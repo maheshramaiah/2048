@@ -34,6 +34,14 @@ export default {
             loader: 'sass-loader'
           }
         ]
+      },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        use: [
+          {
+            loader: 'file-loader'
+          }
+        ]
       }
     ]
   }

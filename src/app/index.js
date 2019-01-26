@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import actionCreators from './actionCreators';
 import './style.scss';
 import { colorMap } from './color';
+import Storage from '../storage';
 
 class App extends React.Component {
   constructor(props) {
@@ -35,9 +36,19 @@ class App extends React.Component {
     }
   }
 
+  restart() {
+    const { app: { present: { score } }, actions } = this.props;
+    const higestScore = Storage.get('HIGHEST_SCORE');
+
+    if (score > higestScore) {
+      Storage.set('HIGHEST_SCORE', score);
+    }
+    actions.start();
+  }
+
   render() {
     const { app, actions } = this.props;
-    const { score, data, finish } = app;
+    const { score, data, finish } = app.present;
 
     if (finish) {
       alert('Game over');
@@ -45,9 +56,15 @@ class App extends React.Component {
 
     return (
       <div className="page" onKeyDown={(e) => this.keyDown(e)} tabIndex="1" ref="container">
-        <div className="score">
-          <p>Score</p>
-          <p>{score}</p>
+        <div className="score clearfix">
+          <div>
+            <p>Score</p>
+            <p>{score}</p>
+          </div>
+          <div className="highestScore">
+            <p>Highest Score</p>
+            <p>{app.higestScore}</p>
+          </div>
         </div>
         <ul className="container">
           {
@@ -61,7 +78,9 @@ class App extends React.Component {
           }
         </ul>
         <div className="actions">
-          <button onClick={() => actions.start()}>Restart</button>
+          <button onClick={() => this.restart()}>RESTART</button>
+          <button onClick={() => actions.undo()} disabled={!app.past}>UNDO</button>
+          <button onClick={() => actions.redo()} disabled={!app.future}>REDO</button>
         </div>
       </div>
     );

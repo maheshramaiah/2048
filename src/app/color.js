@@ -8,5 +8,6 @@ export const colorMap = {
   128: '#edcf72',
   256: '#edcc61',
   512: '#edc850',
-  1024: '#edc813'
+  1024: '#edc813',
+  2048: '#fac999'
 };
