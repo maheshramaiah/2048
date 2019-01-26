@@ -24,7 +24,7 @@ export function getInsertionIndex(data, force = false) {
     return acc;
   }, []);
 
-  const index = indices[Math.floor(Math.random() * indices.length)];
+  const index = indices[randomIndex(indices.length)]
 
   if (force && !index) {
     return randomIndex(15);
