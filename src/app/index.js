@@ -1,23 +1,37 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import actionCreators from './actionCreators';
+import React, { useEffect, useReducer, useRef } from 'react';
+import reducer from './hooks/reducer';
+import Storage from '../storage';
+import * as types from './actionTypes';
 import './style.scss';
 import { colorMap } from './color';
-import Storage from '../storage';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+const initialState = {
+  past: null,
+  present: {
+    data: [
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 0,
+      0, 0, 0, 0
+    ],
+    score: 0,
+    finish: false
+  },
+  future: null,
+  insertion: [2, 4],
+  higestScore: Storage.get('HIGHEST_SCORE') || 0
+};
 
-  componentDidMount() {
-    this.props.actions.start();
-    ReactDOM.findDOMNode(this.refs.container).focus();
-  }
+export default () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const contEl = useRef(null);
 
-  keyDown(e) {
+  useEffect(() => {
+    dispatch({ type: types.START });
+    contEl.current.focus();
+  }, [])
+
+  function keyDown(e) {
     let direction = '';
 
     switch (e.keyCode) {
@@ -31,69 +45,65 @@ class App extends React.Component {
         break;
     }
 
-    if (direction) {
-      this.props.actions.onMove(direction);
-    }
+    direction && dispatch({ type: types.ON_MOVE, direction });
   }
 
-  restart() {
-    const { app: { present: { score } }, actions } = this.props;
+  function restart() {
+    const score = state.present.score;
     const higestScore = Storage.get('HIGHEST_SCORE');
 
     if (score > higestScore) {
       Storage.set('HIGHEST_SCORE', score);
     }
-    actions.start();
+    dispatch({ type: types.START });
   }
 
-  render() {
-    const { app, actions } = this.props;
-    const { score, data, finish } = app.present;
-
-    if (finish) {
-      alert('Game over');
-    }
-
+  function renderScores() {
     return (
-      <div className="page" onKeyDown={(e) => this.keyDown(e)} tabIndex="1" ref="container">
-        <div className="score clearfix">
-          <div>
-            <p>Score</p>
-            <p>{score}</p>
-          </div>
-          <div className="highestScore">
-            <p>Highest Score</p>
-            <p>{app.higestScore}</p>
-          </div>
+      <div className="score clearfix">
+        <div>
+          <p>Score</p>
+          <p>{state.present.score}</p>
         </div>
-        <ul className="container">
-          {
-            data.map((d, index) => {
-              return (
-                <li key={index} style={{ backgroundColor: colorMap[d] }}>
-                  {d !== 0 && d}
-                </li>
-              );
-            })
-          }
-        </ul>
-        <div className="actions">
-          <button onClick={() => this.restart()}>RESTART</button>
-          <button onClick={() => actions.undo()} disabled={!app.past}>UNDO</button>
-          <button onClick={() => actions.redo()} disabled={!app.future}>REDO</button>
+        <div className="highestScore">
+          <p>Highest Score</p>
+          <p>{state.higestScore}</p>
         </div>
       </div>
     );
   }
-}
 
-const mapStateToProps = (state) => {
-  return state;
-}
-const mapDispatchToProps = (dispatch) => {
-  return {
-    actions: bindActionCreators(actionCreators, dispatch)
-  };
-}
+  function renderPlayBoard() {
+    return (
+      <ul className="container">
+        {
+          state.present.data.map((d, index) => {
+            return (
+              <li key={index} style={{ backgroundColor: colorMap[d] }}>
+                {d !== 0 && d}
+              </li>
+            );
+          })
+        }
+      </ul>
+    );
+  }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+  function renderActions() {
+    return (
+      <div className="actions">
+        <button onClick={restart}>RESTART</button>
+        <button onClick={() => dispatch({ type: types.UNDO })} disabled={!state.past}>UNDO</button>
+        <button onClick={() => dispatch({ type: types.REDO })} disabled={!state.future}>REDO</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="page" onKeyDown={keyDown} tabIndex="1" ref={contEl}>
+      {renderScores()}
+      {renderPlayBoard()}
+      {renderActions()}
+    </div>
+  );
+} 

@@ -1,7 +1,6 @@
-import webpack from 'webpack';
-import path from 'path';
+const path = require('path');
 
-export default {
+module.exports = {
   mode: 'development',
   devtool: 'inline-source-map',
   entry: './src/index.js',
@@ -44,5 +43,9 @@ export default {
         ]
       }
     ]
+  },
+  devServer: {
+    contentBase: path.resolve(__dirname, 'src'),
+    port: 3000
   }
 }
