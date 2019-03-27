@@ -7,4 +7,4 @@ npm start
 ### Usage
 Use arrow keys for movements of numbers
 
-<img src="./src/assets/refernce.png" width="500">
+<img src="./src/assets/reference.png" width="500">
