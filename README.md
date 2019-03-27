@@ -1,7 +1,7 @@
 # 2048
 
 ### Install
-npm install
+npm install  
 npm start
 
 ### Usage
