@@ -1,25 +1,8 @@
-import * as types from './actionTypes';
-import { randomIndex, getInsertionIndex, getUpdatedData, compareArrays } from './helpers';
-import Storage from '../storage';
+import * as types from '../actionTypes';
+import { randomIndex, getInsertionIndex, getUpdatedData, compareArrays } from '../helpers';
+import Storage from '../../storage';
 
-const initialState = {
-  past: null,
-  present: {
-    data: [
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      0, 0, 0, 0
-    ],
-    score: 0,
-    finish: false
-  },
-  future: null,
-  insertion: [2, 4],
-  higestScore: Storage.get('HIGHEST_SCORE') || 0
-};
-
-export default function(state = initialState, action) {
+export default function(state, action) {
   switch (action.type) {
     case types.START: {
       const { present: { data }, insertion } = state;
@@ -111,8 +94,5 @@ export default function(state = initialState, action) {
         future: null
       };
     }
-    default: return state;
   }
 }
-
-
