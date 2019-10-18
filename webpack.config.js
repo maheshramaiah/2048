@@ -1,12 +1,16 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { InjectManifest } = require('workbox-webpack-plugin');
+const PwaManifestWebpackPlugin = require('pwa-manifest-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   entry: './src/index.js',
   target: 'web',
   output: {
-    path: __dirname + '/dist',
+    path: __dirname + '/docs',
     publicPath: '/',
     filename: 'bundle.js'
   },
@@ -24,7 +28,7 @@ module.exports = {
         test: /(\.scss)$/,
         use: [
           {
-            loader: 'style-loader'
+            loader: MiniCssExtractPlugin.loader
           },
           {
             loader: 'css-loader'
@@ -36,16 +40,46 @@ module.exports = {
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
-        use: [
-          {
-            loader: 'file-loader'
+        use: {
+          loader: 'file-loader'
+        }
+      },
+      {
+        test: /\.(png)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[path][name].[ext]',
+            context: path.resolve(__dirname, 'src/assets')
           }
-        ]
+        }
       }
     ]
   },
   devServer: {
     contentBase: path.resolve(__dirname, 'src'),
     port: 3000
-  }
-}
+  },
+  plugins: [
+    new MiniCssExtractPlugin(),
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: 'src/index.html'
+    }),
+    new InjectManifest({
+      swSrc: './src/sw.js',
+      precacheManifestFilename: 'precache.[manifestHash].js'
+    }),
+    new PwaManifestWebpackPlugin({
+      name: '2048',
+      short_name: '2048',
+      icon: {
+        src: path.resolve('src/assets/icon.png'),
+        sizes: [512, 384, 192, 152, 144, 128, 96, 72]
+      },
+      start_url: '/',
+      theme_color: '#b1063f',
+      background_color: '#e4e4e4'
+    })
+  ]
+};

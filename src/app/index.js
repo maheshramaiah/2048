@@ -8,12 +8,7 @@ import { colorMap } from './color';
 const initialState = {
   past: null,
   present: {
-    data: [
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      0, 0, 0, 0,
-      0, 0, 0, 0
-    ],
+    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     score: 0,
     finish: false
   },
@@ -29,19 +24,23 @@ export default () => {
   useEffect(() => {
     dispatch({ type: types.START });
     contEl.current.focus();
-  }, [])
+  }, []);
 
   function keyDown(e) {
     let direction = '';
 
     switch (e.keyCode) {
-      case 37: direction = 'left';
+      case 37:
+        direction = 'left';
         break;
-      case 38: direction = 'top';
+      case 38:
+        direction = 'top';
         break;
-      case 39: direction = 'right';
+      case 39:
+        direction = 'right';
         break;
-      case 40: direction = 'bottom';
+      case 40:
+        direction = 'bottom';
         break;
     }
 
@@ -60,12 +59,12 @@ export default () => {
 
   function renderScores() {
     return (
-      <div className="score clearfix">
+      <div className='score clearfix'>
         <div>
           <p>Score</p>
           <p>{state.present.score}</p>
         </div>
-        <div className="highestScore">
+        <div className='highestScore'>
           <p>Highest Score</p>
           <p>{state.higestScore}</p>
         </div>
@@ -75,35 +74,37 @@ export default () => {
 
   function renderPlayBoard() {
     return (
-      <ul className="container">
-        {
-          state.present.data.map((d, index) => {
-            return (
-              <li key={index} style={{ backgroundColor: colorMap[d] }}>
-                {d !== 0 && d}
-              </li>
-            );
-          })
-        }
+      <ul className='container'>
+        {state.present.data.map((d, index) => {
+          return (
+            <li key={index} style={{ backgroundColor: colorMap[d] }}>
+              {d !== 0 && d}
+            </li>
+          );
+        })}
       </ul>
     );
   }
 
   function renderActions() {
     return (
-      <div className="actions">
+      <div className='actions'>
         <button onClick={restart}>RESTART</button>
-        <button onClick={() => dispatch({ type: types.UNDO })} disabled={!state.past}>UNDO</button>
-        <button onClick={() => dispatch({ type: types.REDO })} disabled={!state.future}>REDO</button>
+        <button onClick={() => dispatch({ type: types.UNDO })} disabled={!state.past}>
+          UNDO
+        </button>
+        <button onClick={() => dispatch({ type: types.REDO })} disabled={!state.future}>
+          REDO
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="page" onKeyDown={keyDown} tabIndex="1" ref={contEl}>
+    <div className='page' onKeyDown={keyDown} tabIndex='1' ref={contEl}>
       {renderScores()}
       {renderPlayBoard()}
       {renderActions()}
     </div>
   );
-} 
+};
