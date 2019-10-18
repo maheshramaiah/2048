@@ -11,7 +11,6 @@ module.exports = {
   target: 'web',
   output: {
     path: __dirname + '/docs',
-    publicPath: '/',
     filename: 'bundle.js'
   },
   performance: {
