@@ -11,6 +11,7 @@ module.exports = {
   target: 'web',
   output: {
     path: __dirname + '/docs',
+    publicPath: '/2048/',
     filename: 'bundle.js'
   },
   performance: {
@@ -76,7 +77,7 @@ module.exports = {
         src: path.resolve('src/assets/icon.png'),
         sizes: [512, 384, 192, 152, 144, 128, 96, 72]
       },
-      start_url: '/',
+      start_url: '/2048/',
       theme_color: '#b1063f',
       background_color: '#e4e4e4'
     })

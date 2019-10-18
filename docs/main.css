@@ -66,7 +66,7 @@
   font-family: 'Lato';
   font-style: normal;
   font-weight: 400;
-  src: local("Lato Regular"), local("Lato-Regular"), url(f137ee4862785a1518fb3056eccdc99b.woff) format("woff");
+  src: local("Lato Regular"), local("Lato-Regular"), url(/2048/f137ee4862785a1518fb3056eccdc99b.woff) format("woff");
   font-display: swap; }
 
 body {

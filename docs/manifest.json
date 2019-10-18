@@ -45,7 +45,7 @@
   ],
   "name": "2048",
   "short_name": "2048",
-  "start_url": "/",
+  "start_url": "/2048/",
   "theme_color": "#b1063f",
   "background_color": "#e4e4e4"
 }
