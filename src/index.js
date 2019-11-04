@@ -1,18 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import App from './app/index';
 import './style.scss';
 
-ReactDOM.render(<App />, document.getElementById('app'));
+function Page() {
+  useEffect(() => {
+    async function registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        try {
+          await navigator.serviceWorker.register('./sw.js', {
+            scope: '/2048/'
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
 
-async function registerServiceWorker() {
-  try {
-    await navigator.serviceWorker.register('./sw.js');
-  } catch (e) {
-    console.log(e);
-  }
+    window.addEventListener('load', registerServiceWorker);
+
+    return () => {
+      window.removeEventListener('load', registerServiceWorker);
+    };
+  }, []);
+
+  return <App />;
 }
 
-if ('serviceWorker' in navigator) {
-  registerServiceWorker();
-}
+ReactDOM.render(<Page />, document.getElementById('app'));

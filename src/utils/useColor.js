@@ -1,4 +1,6 @@
-export const colorMap = {
+import { useCallback } from 'react';
+
+const COLOR = {
   2: '#eee4da',
   4: '#ede0c8',
   8: '#f2b179',
@@ -11,3 +13,11 @@ export const colorMap = {
   1024: '#edc813',
   2048: '#fac999'
 };
+
+export function useColor() {
+  const get = useCallback((key) => {
+    return COLOR[key];
+  }, []);
+
+  return { get };
+}

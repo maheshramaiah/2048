@@ -1,24 +1,15 @@
 import React, { useEffect, useReducer, useRef } from 'react';
-import reducer from './hooks/reducer';
-import Storage from '../storage';
+import ReactTouchEvents from 'react-touch-events';
+import { useStorage } from '../utils/useStorage';
+import { useColor } from '../utils/useColor';
+import reducer, { initialState } from './reducer';
 import * as types from './actionTypes';
 import './style.scss';
-import { colorMap } from './color';
-
-const initialState = {
-  past: null,
-  present: {
-    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    score: 0,
-    finish: false
-  },
-  future: null,
-  insertion: [2, 4],
-  higestScore: Storage.get('HIGHEST_SCORE') || 0
-};
 
 export default () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const storage = useStorage();
+  const color = useColor();
   const contEl = useRef(null);
 
   useEffect(() => {
@@ -47,26 +38,30 @@ export default () => {
     direction && dispatch({ type: types.ON_MOVE, direction });
   }
 
+  function onSwipe(direction) {
+    direction && dispatch({ type: types.ON_MOVE, direction });
+  }
+
   function restart() {
     const score = state.present.score;
-    const higestScore = Storage.get('HIGHEST_SCORE');
+    const higestScore = storage.get('HIGHEST_SCORE');
 
     if (score > higestScore) {
-      Storage.set('HIGHEST_SCORE', score);
+      storage.set('HIGHEST_SCORE', score);
     }
     dispatch({ type: types.START });
   }
 
   function renderScores() {
     return (
-      <div className='score clearfix'>
+      <div className='score'>
         <div>
           <p>Score</p>
           <p>{state.present.score}</p>
         </div>
-        <div className='highestScore'>
+        <div>
           <p>Highest Score</p>
-          <p>{state.higestScore}</p>
+          <p>{storage.get('HIGHEST_SCORE') || 0}</p>
         </div>
       </div>
     );
@@ -74,15 +69,16 @@ export default () => {
 
   function renderPlayBoard() {
     return (
-      <ul className='container'>
-        {state.present.data.map((d, index) => {
-          return (
-            <li key={index} style={{ backgroundColor: colorMap[d] }}>
+      <ReactTouchEvents onSwipe={onSwipe}>
+        <ul className='container'>
+          {state.present.data.map((d, index) => (
+            <li key={index} style={{ backgroundColor: color.get(d) }}>
               {d !== 0 && d}
             </li>
-          );
-        })}
-      </ul>
+          )
+          )}
+        </ul>
+      </ReactTouchEvents>
     );
   }
 

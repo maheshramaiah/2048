@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --config webpack.config.js",
     "clean": "rm -rf docs",
     "build": "npm run clean && webpack --config webpack.prod.config.js"
   },
@@ -32,9 +32,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.6.3",
-    "react": "^16.8.5",
-    "react-dom": "^16.8.5",
-    "react-redux": "^6.0.1",
-    "redux": "^4.0.1"
+    "immer": "^5.0.0",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "react-touch-events": "^2.1.0"
   }
 }

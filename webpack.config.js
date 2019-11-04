@@ -58,7 +58,9 @@ module.exports = {
   },
   devServer: {
     contentBase: path.resolve(__dirname, 'src'),
-    port: 3000
+    port: 3000,
+    open: true,
+    openPage: '2048/'
   },
   plugins: [
     new MiniCssExtractPlugin(),
