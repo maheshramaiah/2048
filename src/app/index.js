@@ -2,6 +2,7 @@ import React, { useEffect, useReducer, useRef } from 'react';
 import ReactTouchEvents from 'react-touch-events';
 import { useStorage } from '../utils/useStorage';
 import { useColor } from '../utils/useColor';
+import { useThemeProvider } from '../ThemeProvider';
 import reducer, { initialState } from './reducer';
 import * as types from './actionTypes';
 import './style.scss';
@@ -11,6 +12,7 @@ export default () => {
   const storage = useStorage();
   const color = useColor();
   const contEl = useRef(null);
+  const { theme, toggleTheme } = useThemeProvider();
 
   useEffect(() => {
     dispatch({ type: types.START });
@@ -52,9 +54,17 @@ export default () => {
     dispatch({ type: types.START });
   }
 
+  function renderTheme() {
+    return (
+      <div onClick={toggleTheme} className="themeText">
+        {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+      </div>
+    );
+  }
+
   function renderScores() {
     return (
-      <div className='score'>
+      <div className="score">
         <div>
           <p>Score</p>
           <p>{state.present.score}</p>
@@ -70,13 +80,12 @@ export default () => {
   function renderPlayBoard() {
     return (
       <ReactTouchEvents onSwipe={onSwipe}>
-        <ul className='container'>
+        <ul className="container">
           {state.present.data.map((d, index) => (
             <li key={index} style={{ backgroundColor: color.get(d) }}>
               {d !== 0 && d}
             </li>
-          )
-          )}
+          ))}
         </ul>
       </ReactTouchEvents>
     );
@@ -84,12 +93,18 @@ export default () => {
 
   function renderActions() {
     return (
-      <div className='actions'>
+      <div className="actions">
         <button onClick={restart}>RESTART</button>
-        <button onClick={() => dispatch({ type: types.UNDO })} disabled={!state.past}>
+        <button
+          onClick={() => dispatch({ type: types.UNDO })}
+          disabled={!state.past}
+        >
           UNDO
         </button>
-        <button onClick={() => dispatch({ type: types.REDO })} disabled={!state.future}>
+        <button
+          onClick={() => dispatch({ type: types.REDO })}
+          disabled={!state.future}
+        >
           REDO
         </button>
       </div>
@@ -97,10 +112,13 @@ export default () => {
   }
 
   return (
-    <div className='page' onKeyDown={keyDown} tabIndex='1' ref={contEl}>
-      {renderScores()}
-      {renderPlayBoard()}
-      {renderActions()}
+    <div className="page" onKeyDown={keyDown} tabIndex="1" ref={contEl}>
+      {renderTheme()}
+      <div className="gameContent">
+        {renderScores()}
+        {renderPlayBoard()}
+        {renderActions()}
+      </div>
     </div>
   );
 };

@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import App from './app/index';
+import ThemeProvider, { useThemeProvider } from './ThemeProvider';
 import './style.scss';
 
 function Page() {
+  const { theme } = useThemeProvider();
+
   useEffect(() => {
     async function registerServiceWorker() {
       if ('serviceWorker' in navigator) {
@@ -24,7 +27,16 @@ function Page() {
     };
   }, []);
 
-  return <App />;
+  return (
+    <div className={theme}>
+      <App />
+    </div>
+  );
 }
 
-ReactDOM.render(<Page />, document.getElementById('app'));
+ReactDOM.render(
+  <ThemeProvider>
+    <Page />
+  </ThemeProvider>,
+  document.getElementById('app')
+);

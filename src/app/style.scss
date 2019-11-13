@@ -1,14 +1,20 @@
 .page {
+  background-color: var(--page-background);
+  height: 100%;
+  transition: background-color 0.25s ease-out;
+  overflow: auto;
+  &:focus {
+    outline: none;
+  }
+}
+
+.gameContent {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
   padding: 20px;
   box-sizing: border-box;
-  &:focus {
-    outline: none;
-  }
 }
 
 .container {
@@ -30,7 +36,7 @@
     box-sizing: border-box;
     border-radius: 4px;
     margin: 5px;
-    background: rgba(238, 228, 218, 0.35);
+    background-color: var(--box-background);
     font-weight: bold;
     font-size: 26px;
   }
@@ -70,4 +76,11 @@
       margin: 5px 0;
     }
   }
+}
+
+.themeText {
+  text-align: right;
+  padding: 20px;
+  color: var(--text-color);
+  cursor: pointer;
 }
