@@ -1,13 +1,18 @@
 .page {
+  background-color: var(--page-background);
+  height: 100%;
+  transition: background-color 0.25s ease-out;
+  overflow: auto; }
+  .page:focus {
+    outline: none; }
+
+.gameContent {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
   padding: 20px;
   box-sizing: border-box; }
-  .page:focus {
-    outline: none; }
 
 .container {
   display: flex;
@@ -28,7 +33,7 @@
     box-sizing: border-box;
     border-radius: 4px;
     margin: 5px;
-    background: rgba(238, 228, 218, 0.35);
+    background-color: var(--box-background);
     font-weight: bold;
     font-size: 26px; }
 
@@ -60,6 +65,12 @@
     .score div p {
       margin: 5px 0; }
 
+.themeText {
+  text-align: right;
+  padding: 20px;
+  color: var(--text-color);
+  cursor: pointer; }
+
 @font-face {
   font-family: "Lato";
   font-style: normal;
@@ -67,19 +78,26 @@
   src: local("Lato Regular"), local("Lato-Regular"), url(/2048/f137ee4862785a1518fb3056eccdc99b.woff) format("woff");
   font-display: swap; }
 
+html {
+  height: 100%; }
+
 body {
   font-family: "Lato";
-  margin: 0; }
+  margin: 0;
+  height: 100%;
+  --box-background: rgba(238, 228, 218, 0.35); }
+
+.dark {
+  --page-background: rgba(0, 0, 0, 0.85);
+  --text-color: #fff; }
+
+.light {
+  --page-background: #fff;
+  --text-color: #000; }
 
 #app {
   width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.65); }
-
-.clearfix:after {
-  content: " ";
-  visibility: hidden;
-  display: block;
-  height: 0;
-  clear: both; }
+  height: 100%; }
+  #app > div {
+    height: inherit; }
 
